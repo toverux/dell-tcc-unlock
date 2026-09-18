@@ -48,6 +48,11 @@ twice with a reboot in between:
 4. **Back in Linux, run `./unlock.sh` again.** It sets the offset, installs a systemd unit that
    restores it at every boot, and removes the boot entry and staged files.
 
+![The shell steps of the procedure](docs/uefi-shell.png)
+
+*Step 3, reconstructed: rendered text rather than a photograph of a boot, using the line format
+`setup_var.efi` actually prints. `0x01` before, `0x00` after.*
+
 Requirements: Secure Boot off (the shell is unsigned), plus `curl`, `unzip`, `7z`, `efibootmgr`,
 and `python3` with `pip`. Nothing is installed system-wide except the systemd unit in step 4.
 
