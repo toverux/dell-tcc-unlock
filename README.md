@@ -44,7 +44,10 @@ twice with a reboot in between:
    entry for the next boot only.
 3. **You clear the lock in the shell**, with two generated one-line scripts it prints for you:
    `tccread.nsh` to look, `tccunlock.nsh` to change. Anything unexpected, type `reset` and nothing
-   has changed.
+   has changed. The shell numbers every volume it finds, so your EFI partition is usually but not
+   always `fs0`: it is the `map -r` line carrying your ESP's partition GUID, which step 2 prints (or
+   `lsblk -no PARTUUID $(findmnt -no SOURCE /boot/efi)`). Failing that, `ls fs0:\EFI\tools`,
+   `ls fs1:\EFI\tools` and so on until one lists `tccread.nsh`.
 4. **Back in Linux, run `./unlock.sh` again.** It sets the offset, installs a systemd unit that
    restores it at every boot, and removes the boot entry and staged files.
 

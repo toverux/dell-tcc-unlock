@@ -175,18 +175,28 @@ TXT
 	[ -n "$entry" ] || { echo "The boot entry was not created; nothing will boot the shell."; exit 1; }
 	sudo efibootmgr -q -n "$entry"
 
+	# The shell numbers every FAT volume it finds, so the ESP is often not fs0. Its line in
+	# `map -r` is the one carrying this partition GUID, printed here in the shell's case.
+	esp_guid=$(lsblk -no PARTUUID "$device" | tr 'a-f' 'A-F')
+
 	say "Step 3 of 4 - what to type in the shell after the reboot"
 	cat <<TXT
 Save these commands before rebooting - photograph the screen, or copy them to your
 phone. Once the machine boots into the shell this screen is gone, and the shell has no
 way to show it to you.
 
-  Shell> map -r                    look for the FSx line matching your ESP
-  Shell> fs0:                      use that FS number; fs0 is only an example
+  Shell> map -r                    lists every volume; yours is the FSx line whose
+                                   device path ends with the GUID below
+  Shell> fs0:                      usually fs0, but not always
   FS0:\> cd EFI\tools
   FS0:\EFI\tools\> tccread.nsh     expect $TARGET to read 0x01
   FS0:\EFI\tools\> tccunlock.nsh   writes 0x00, then reads it back
   FS0:\EFI\tools\> reset           leaves the shell and boots Linux again
+
+Your ESP is the one containing:  $esp_guid
+
+The table can be long. If you would rather not read it, try the volumes in turn -
+'ls fs0:\EFI\tools', 'ls fs1:\EFI\tools' - and use the one listing tccread.nsh.
 
 ${RED}If tccread.nsh shows anything other than 0x01, type reset; nothing will have changed.${OFF}
 
