@@ -24,7 +24,7 @@ kernel interface works.
 
 > **Before you start:** the offsets differ per model and BIOS version, so the scripts read them
 > from your own BIOS image and check them against your running firmware before anything is
-> written — don't reuse an offset from another machine. If a wrong byte ever does get written,
+> written, so don't reuse an offset from another machine. If a wrong byte ever does get written,
 > [Recovery](#recovery) is an RTC reset that puts the BIOS back to defaults.
 
 ## Use it
@@ -73,7 +73,7 @@ stress-ng --cpu 0 --cpu-method matrixprod --timeout 180s
 sudo turbostat --quiet --show PkgTmp,PkgWatt,Avg_MHz --interval 2
 ```
 
-`PkgTmp` should climb and then hold at your offset below TjMax — 90°C for an offset of 10 — with
+`PkgTmp` should climb and then hold at your offset below TjMax, 90°C for an offset of 10, with
 `Avg_MHz` dropping as it holds there. The hardware counter below climbs whenever the thermal
 control circuit engages, so a rising count with the temperature pinned below TjMax is the offset
 doing its job:
@@ -86,7 +86,7 @@ cat /sys/devices/system/cpu/cpu0/thermal_throttle/package_throttle_count
 
 Assume every update re-locks it: setup variables are re-created from defaults when their layout
 changes between versions. "Restore defaults" in the BIOS menu and an RTC reset do the same.
-`systemctl status tcc-offset.service` tells you — it fails at boot once the lock is back. Run
+`systemctl status tcc-offset.service` tells you: it fails at boot once the lock is back. Run
 `./unlock.sh` again to redo it.
 
 ## Recovery
